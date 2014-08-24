@@ -2,7 +2,6 @@ package spaceinvaders;
 
 import spaceinvaders.highscores.*;
 
-import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
@@ -10,14 +9,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.KeyStroke;
 
 /**
@@ -30,8 +26,9 @@ public class SpaceInvadersApp extends JFrame {
 	private final GamePanel game;
 
 	final private JMenuItem menuItemGamePause;
-	
-	final private HighScoreTableModel scoresTable = new HighScoreTableModel("Name","Score");
+
+	final private HighScoreTableModel scoresTable = new HighScoreTableModel(
+			"Name", "Score");
 
 	/**
 	 * Create new Space Invaders application.
@@ -64,13 +61,15 @@ public class SpaceInvadersApp extends JFrame {
 		menuItemGamePause.setEnabled(false);
 		menuGame.add(menuItemGamePause);
 
-		//add top scores button
-		final JMenuItem topScores = new JMenuItem("Top Scores", KeyEvent.VK_T);
+		// add top scores button
+		final JMenuItem topScores = new JMenuItem("Top Scores", KeyEvent.VK_S);
+		topScores.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
+				ActionEvent.CTRL_MASK));
 		menuGame.add(topScores);
 
 		menuBar.add(menuGame);
-		//end add top scores button
-		
+		// end add top scores button
+
 		menuGame.addSeparator();
 
 		final JMenuItem menuItemGameExit = new JMenuItem("Exit", KeyEvent.VK_X);
@@ -122,24 +121,22 @@ public class SpaceInvadersApp extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				(new HighScoreDialog(scoresTable)).setVisible(true);
-				/*				
-				JPanel scoresPanel = new JPanel(new BorderLayout());				
-				JTable table = new JTable(scoresTable);
-				scoresPanel.add(table.getTableHeader(), BorderLayout.NORTH);
-				scoresPanel.add(table, BorderLayout.CENTER);
-
-				JButton button = new JButton("OK");
-				button.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						cp.remove(scoresPanel);
-						pack();
-					}
-				});
-
-				scoresPanel.add(button, BorderLayout.SOUTH);
-				cp.add(scoresPanel, BorderLayout.EAST);
-				
-				pack();	*/	
+				/*
+				 * JPanel scoresPanel = new JPanel(new BorderLayout()); JTable
+				 * table = new JTable(scoresTable);
+				 * scoresPanel.add(table.getTableHeader(), BorderLayout.NORTH);
+				 * scoresPanel.add(table, BorderLayout.CENTER);
+				 * 
+				 * JButton button = new JButton("OK");
+				 * button.addActionListener(new ActionListener() { public void
+				 * actionPerformed(ActionEvent e) { cp.remove(scoresPanel);
+				 * pack(); } });
+				 * 
+				 * scoresPanel.add(button, BorderLayout.SOUTH);
+				 * cp.add(scoresPanel, BorderLayout.EAST);
+				 * 
+				 * pack();
+				 */
 			}
 		});
 
@@ -188,27 +185,7 @@ public class SpaceInvadersApp extends JFrame {
 		if (game.isGameWon()) {
 			message = "You defeated the alien menace!  Congratulations!\n\n"
 					+ "Your score was " + game.getScore();
-			
-			//add high score
-			
-			if(game.getScore() > 0){
-				String playerName;
-				playerName = JOptionPane.showInputDialog(
-						"Your score was " + game.getScore(), "Please enter your name");
-				while(playerName == null){
-					int reply = JOptionPane.showConfirmDialog(null, "You did not enter a Player name\nAre you sure? ", "Warning", JOptionPane.YES_NO_OPTION);
-					if (reply == JOptionPane.NO_OPTION){
-						playerName = JOptionPane.showInputDialog(
-								"Your score was " + game.getScore(), "Please enter your name");
-						scoresTable.addRow(playerName,
-								Integer.valueOf(game.getScore()));
-					} else {
-						break;
-					}
-				}
-			}
-			// end add high score
-			
+
 		} else {
 			message = "Oh no! The aliens have defeated you.";
 		}
@@ -217,7 +194,36 @@ public class SpaceInvadersApp extends JFrame {
 				JOptionPane.INFORMATION_MESSAGE);
 
 		menuItemGamePause.setEnabled(false);
-		
+
+		// add high score
+
+		if (game.isGameWon() && game.getScore() > 0) {
+			String playerName;
+			playerName = JOptionPane.showInputDialog(
+					"Your score was " + game.getScore(),
+					"Please enter your name");
+			if (playerName != null)
+				scoresTable
+						.addRow(playerName, Integer.valueOf(game.getScore()));
+			while (playerName == null) {
+				int reply = JOptionPane.showConfirmDialog(null,
+						"You did not enter a Player name\nAre you sure? ",
+						"Warning", JOptionPane.YES_NO_OPTION);
+				if (reply == JOptionPane.NO_OPTION) {
+					playerName = JOptionPane.showInputDialog("Your score was "
+							+ game.getScore(), "Please enter your name");
+					if (playerName != null)
+						scoresTable.addRow(playerName,
+								Integer.valueOf(game.getScore()));
+				} else {
+					scoresTable.addRow("hche608", Integer.valueOf(game.getScore()));
+					break;
+				}
+			}
+
+		}
+		// end add high score
+
 	}
 
 	/**
