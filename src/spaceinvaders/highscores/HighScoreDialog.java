@@ -10,7 +10,7 @@ public class HighScoreDialog extends JDialog {
 	public HighScoreDialog(HighScoreTableModel tableModel) {
 		setTitle("Top Scores");
 		setPreferredSize(new Dimension(200, 400));
-		//setLocationRelativeTo(null);
+		setLocationRelativeTo(null);
 		//setDefaultCloseOperation(EXIT_ON_CLOSE);
 		Container cp = getContentPane();
 		
